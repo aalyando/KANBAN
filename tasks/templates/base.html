@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ua">
+<head>
+    <title>{% block title %}KANBAN DASH{% endblock %}</title>
+
+</head>
+<body style="background-color: #e9ecef">
+<style>
+.menu-main {
+  list-style: none;
+  padding: 0 30px;
+  margin: 0;
+  font-size: 18px;
+  text-align: center;
+  position: relative;
+  background: #eaddd7;
+    border: 3px solid black;
+  border-radius: 20px;
+}
+.menu-main li {
+  text-decoration: none;
+  display: inline-block;
+  margin: 0 15px;
+  padding: 10px 30px;
+  font-family: 'PT Sans Caption', sans-serif;
+  color: black;
+  transition: .3s linear;
+  position: relative;
+}
+</style>
+<div class="navbar">
+    <nav>
+        <ul class="menu-main">
+            <li><p>Logo</p></li>
+            <li><h4>KANBAN</h4></li>
+            {% if user.is_authenticated %}
+            <li style="color: aqua">Hi, {{ user.username }} <li><a href="{% url 'logout' %}">Logout</a></li></li>
+        {% else %}
+            <li><a href="{% url 'login' %}">Login</a></li>
+        {% endif %}
+        </ul>
+    </nav>
+</div>
+
+    <div>
+        {% block content %}
+        {% endblock %}
+    </div>
+</body>
+</html>

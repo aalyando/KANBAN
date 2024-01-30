@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <form method="POST">
+  {% csrf_token %}
+  {{ form.as_p }}
+        {% for task in tasks_list %}
+            <option value="{{ title }}">{{ description }}>{{ assigned_to }}</option>
+        {% endfor %}
+  <button type="submit">Add task</button>
+</form>
+{% endblock %}

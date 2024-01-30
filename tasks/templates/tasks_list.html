@@ -1,0 +1,208 @@
+{% extends 'base.html' %}
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+{% block content %}
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        .kanban-container {
+    display: flex;
+}
+
+.status-column {
+    flex: 1;
+    margin: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 18%;
+}
+
+.task-list {
+    list-style: none;
+    padding: 0;
+}
+
+.task-list li {
+    background-color: #f2f2f2;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 10px;
+        }
+
+        .additional-content {
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+        }
+
+        img {
+            width:  15px;
+        }
+    </style>
+    <div class="kanban-container">
+    <div class="status-column new">
+    <div class="grid-container">
+        <ul class="task-list">
+        <h2>New <a href="{% url 'newtask' %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Add.svg/150px-Add.svg.png" alt="Add">
+</a></h2>
+            {% for task in tasks_list %}
+                {% if task.status == 'New' %}
+                    <li class="additional-content">
+                        <h2>{{ task.title }}
+                            {% if request.user == task.created_by or user.is_superuser %}
+                            <a href="{% url 'edit_task' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/100px-Edit_icon_%28the_Noun_Project_30184%29.svg.png" alt="Edit"></a>{% endif %}
+                            {% if request.user == task.created_by %}
+                                <a href="{% url 'move_task_forward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Иконка_стрелки_вправо_%28ei%29.svg" alt="Forward">
+</a>{% endif %}
+                            {% if user.is_superuser %}
+                                <a href="{% url 'delete_task' task.id %}">
+                               <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Иконка_крестика_%28ei%29.svg" alt="Delete">
+                                </a>{% endif %}
+                        </h2>
+                        <p>{{ task.description }}</p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+    <div class="status-column in-progress">
+    <div class="grid-container">
+        <ul class="task-list">
+        <h2>In Progress</h2>
+            {% for task in tasks_list %}
+                {% if task.status == 'In Progress' %}
+                    <li class="additional-content"><h2>
+                        {% if request.user == task.created_by %}
+                        <a href="{% url 'move_task_backward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Иконка_стрелки_влево_%28ei%29.svg" alt="Backward">
+</a>{% endif %}
+                            {{ task.title }}
+                           {% if request.user == task.created_by or user.is_superuser %}
+                            <a href="{% url 'edit_task' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/100px-Edit_icon_%28the_Noun_Project_30184%29.svg.png" alt="Edit"></a>{% endif %}
+                            {% if request.user == task.created_by %}
+                                <a href="{% url 'move_task_forward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Иконка_стрелки_вправо_%28ei%29.svg" alt="Forward">
+</a>{% endif %}
+                    {% if user.is_superuser %}
+                                <a href="{% url 'delete_task' task.id %}">
+                               <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Иконка_крестика_%28ei%29.svg" alt="Delete">
+                                </a>{% endif %}
+                        </h2>
+                        <p>{{ task.description }}</p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+<div class="status-column in-qa">
+    <div class="grid-container">
+        <ul class="task-list">
+        <h2>In QA</h2>
+            {% for task in tasks_list %}
+                {% if task.status == 'In QA' %}
+                    <li class="additional-content"><h2>
+                        {% if request.user == task.created_by %}
+                        <a href="{% url 'move_task_backward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Иконка_стрелки_влево_%28ei%29.svg" alt="Backward">
+</a>{% endif %}
+                            {{ task.title }}
+                            {% if request.user == task.created_by or user.is_superuser %}
+                            <a href="{% url 'edit_task' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/100px-Edit_icon_%28the_Noun_Project_30184%29.svg.png" alt="Edit"></a>{% endif %}
+                            {% if request.user == task.created_by %}
+                                <a href="{% url 'move_task_forward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Иконка_стрелки_вправо_%28ei%29.svg" alt="Forward">
+</a>{% endif %}
+                    {% if user.is_superuser %}
+                                <a href="{% url 'delete_task' task.id %}">
+                               <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Иконка_крестика_%28ei%29.svg" alt="Delete">
+                                </a>{% endif %}
+                          </h2>
+                        <p>{{ task.description }}</p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+    <div class="status-column ready">
+    <div class="grid-container">
+        <ul class="task-list">
+        <h2>Ready</h2>
+            {% for task in tasks_list %}
+                {% if task.status == 'Ready' %}
+                    <li class="additional-content"><h2>
+                       {% if request.user == task.created_by %}
+                        <a href="{% url 'move_task_backward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Иконка_стрелки_влево_%28ei%29.svg" alt="Backward">
+</a>{% endif %}
+                            {{ task.title }}
+                           {% if request.user == task.created_by or user.is_superuser %}
+                            <a href="{% url 'edit_task' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/100px-Edit_icon_%28the_Noun_Project_30184%29.svg.png" alt="Edit"></a>{% endif %}
+                            {% if user.is_superuser or request.user == task.created_by%}
+                                <a href="{% url 'move_task_forward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/1/1b/Иконка_стрелки_вправо_%28ei%29.svg" alt="Forward">
+</a> {% endif %}
+                    {% if user.is_superuser %}
+                                <a href="{% url 'delete_task' task.id %}">
+                               <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Иконка_крестика_%28ei%29.svg" alt="Delete">
+                                </a>{% endif %}
+                        </h2>
+                        <p>{{ task.description }}</p>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+    <div class="status-column done">
+    <div class="grid-container">
+        <ul class="task-list">
+        <h2>Done</h2>
+            {% for task in tasks_list %}
+                {% if task.status == 'Done' %}
+                    <li class="additional-content"><h2>
+                        {% if user.is_superuser or request.user == task.created_by %}
+                            <a href="{% url 'move_task_backward' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Иконка_стрелки_влево_%28ei%29.svg" alt="Backward">
+</a> {% endif %}
+                            {{ task.title }}
+                            {% if request.user == task.created_by or user.is_superuser %}
+                            <a href="{% url 'edit_task' task.id %}">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/64/Edit_icon_%28the_Noun_Project_30184%29.svg/100px-Edit_icon_%28the_Noun_Project_30184%29.svg.png" alt="Edit"></a>{% endif %}
+                    {% if user.is_superuser %}
+                                <a href="{% url 'delete_task' task.id %}">
+                               <img src="https://upload.wikimedia.org/wikipedia/commons/9/98/Иконка_крестика_%28ei%29.svg" alt="Delete">
+                                </a>{% endif %}
+                        </h2>
+                        <p>{{ task.description }}</p>
+
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    </div>
+    </div>
+
+    </div>
+
+{% endblock %}
